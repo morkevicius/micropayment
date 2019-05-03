@@ -7,7 +7,7 @@ module Micropayment
   autoload :Config,   'services/config'
   autoload :API,      'services/api'
   autoload :Debit,    'services/debit'
-  autoload :Prepay,    'services/prepay'
+  autoload :Prepay,   'services/prepay'
 
   def self.assert_valid_keys(opts, *valid_keys)
     valid_keys.flatten!
