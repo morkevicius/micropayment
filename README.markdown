@@ -22,23 +22,30 @@ Let's try out a test payment using direct debit:
 
 ```
 # create a customer
-customer = Micropayment::Debit.customerCreate(
-  :firstName  => 'Jeff',
-  :lastName   => 'Winger'
+customer =  Micropayment::Debit.customerCreate(
+   :customerId => Time.now.to_i.to_s, 
+   :freeParams => {
+     "first_name" => "John", 
+     "last_name" => "Doe"
+     }
 )
+
+customer_data = Micropayment::Debit.customerGet(:customerId => customer["customerId"])
+
 
 # add a bank account to the customer
 Micropayment::Debit.bankaccountSet(
-  :customerId     => customer.customerId,
-  :bankCode       => '10010010',
-  :accountNumber  => 'something_valid',
-  :accountHolder  => "#{customer.firstName} #{customer.lastName}"
+  :customerId     => customer["customerId"],
+  :iban => 'DE89888888881234567890', 
+  :country => "DE",
+  :accountHolder  => "#{customer_data['freeParams[first_name]']} #{customer_data['freeParams[last_name]']}"
 )
 
 # create a session
+your_project_id ='xxx-xxx-xxxxxxxxx' 
 session = Micropayment::Debit.sessionCreate(
-  :customerId => customer.customerId,
-  :project    => 'your-project-key',
+  :customerId => customer["customerId"],
+  :project    => your_project_id,
   :amount     => 10.00,
   :payText    => 'Thank you for ...'
 )

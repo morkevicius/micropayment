@@ -1,7 +1,7 @@
 module Micropayment
 
   module API
-
+    require 'active_support/all'
     extend self
 
     RootCA          = '/etc/ssl/certs'
@@ -11,18 +11,17 @@ module Micropayment
       raise "Micropayment::Config.api_key has not been set. See github.com/GeneralScripting/micropayment"  unless Config.api_key
     end
 
-    def call(url, method, data={})
+    def call(url, method, data = {})
       ensure_api_key!
-      data[:action]     = method
-      data[:accessKey]  = Config.api_key
+      data[:action] = method
+      data[:accessKey] = Config.api_key
       # Workaround micropayment API
       data[:testMode] ||= Config.sandbox_param ? 1 : 0
-      data.delete_if {|k,v| v.nil? }
-      uri = Addressable::URI.parse(url)
-      uri.query_values = data
+      data.delete_if {|k, v| v.nil?}
+      uri = Addressable::URI.parse(url + '?' + data.to_query)
+      # uri.query_values = data
       parseNVP get(uri)
     end
-
     def get(uri)
       use_ssl = uri.scheme == 'https'
       http = Net::HTTP.new(uri.host, use_ssl ? 443 : 80)

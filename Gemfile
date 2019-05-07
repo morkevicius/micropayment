@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
 gem 'addressable'
+gem 'activesupport'
 # gem 'yajl-ruby'
 
 group :development do
