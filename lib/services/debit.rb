@@ -22,8 +22,9 @@ module Micropayment
 
       # "löscht alle Kunden und Transaktionen in der Testumgebung"
       # "deletes all customers and transactions in the test environment"
-      def reset_test
-        execute(:resetTest, :testMode => 1)
+      def reset_test(options = {})
+        options[:test_mode] = 1
+        execute(:resetTest, options)
       end
 
       # "legt neuen Kunden an"

@@ -21,8 +21,9 @@ First you need to setup at least your API key:
 Let's try out a test payment using direct debit:
 
 ```
+api_key = Micropayment::Config.api_key
 
-customer =  Micropayment::Debit.reset_test
+customer =  Micropayment::Debit.reset_test(:accessKey => api_key)
 customer =  Micropayment::Debit.customerList
 customer =  Micropayment::Debit.transactionList((:sessionId  => session["sessionId"])
 
@@ -56,7 +57,8 @@ session = Micropayment::Debit.sessionCreate(
   :project    => your_project_id,
   :amount     => 100,
   :payText    => 'Thank you for ...',
-  :mandateRecur => "RECURRING"
+  :mandateRecur => "RECURRING",
+  :payDate => '10'
 )
 
 Micropayment::Debit.sessionApprove(:sessionId  => session["sessionId"])
