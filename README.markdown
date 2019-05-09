@@ -23,15 +23,15 @@ First you need to setup at least your API key
 Let's try out a test payment using direct debit:
 
 ```
-api_key = Micropayment::Config.api_key # so we dont have to store it here :) 
+api_key = Micropayment::Config.api_key || '' # so we dont have to store it here :) 
 
-customer =  Micropayment::Debit.reset_test(:accessKey => api_key)
-customer =  Micropayment::Debit.customerList(:accessKey => api_key)
-customer =  Micropayment::Debit.transactionList(:accessKey => api_key, :sessionId  => session["sessionId"])
+customer =  Micropayment::Debit.reset_test(:testMode => 1, :accessKey => api_key)
+customer =  Micropayment::Debit.customerList(:testMode => 1, :accessKey => api_key)
 
 # create a customer
 customer =  Micropayment::Debit.customerCreate(
    :accessKey => api_key,
+   :testMode => 1, 
    :customerId => Time.now.to_i.to_s, 
    :freeParams => {
      "first_name" => "John", 
@@ -39,12 +39,18 @@ customer =  Micropayment::Debit.customerCreate(
      }
 )
 
-customer_data = Micropayment::Debit.customerGet(:customerId => customer["customerId"])
+
+customer_data = Micropayment::Debit.customerGet(  
+  :accessKey => api_key,
+  :testMode => 1,
+  :customerId => customer["customerId"]
+)
 
 
 # add a bank account to the customer
 Micropayment::Debit.bankaccountSet(
   :accessKey => api_key,
+  :testMode => 1, 
   :customerId     => customer["customerId"],
   :iban => 'DE89888888881234567890', 
   :bankCode => '88888888',
@@ -58,6 +64,7 @@ Micropayment::Debit.bankaccountSet(
 your_project_id = '1ohg-l6mtc-49a5cc9c' 
 session = Micropayment::Debit.sessionCreate(
   :accessKey => api_key,
+  :testMode => 1, 
   :customerId => customer["customerId"],
   :project    => your_project_id,
   :amount     => 100,
@@ -65,11 +72,15 @@ session = Micropayment::Debit.sessionCreate(
   :mandateRecur => "RECURRING"
   )
 
-Micropayment::Debit.sessionApprove(:accessKey => api_key, :sessionId  => session["sessionId"])
+transaction_list =  Micropayment::Debit.transactionList(:testMode => 1, :accessKey => api_key, 
+:sessionId  => session["sessionId"])
 
-Micropayment::Debit.sessionChargeTest(:accessKey => api_key, :sessionId  => session["sessionId"])
+Micropayment::Debit.sessionApprove(:accessKey => api_key, :testMode => 1, :sessionId  => session["sessionId"])
+
+Micropayment::Debit.sessionChargeTest(:accessKey => api_key, :testMode => 1, :sessionId  => session["sessionId"])
 
 Micropayment::Debit.sessionReverseTest(
+  :testMode => 1, 
   :accessKey => api_key, 
   :sessionId  => session["sessionId"],
   :reverseCode => 0,
@@ -79,7 +90,7 @@ Micropayment::Debit.sessionReverseTest(
 ```
 
 ```
-Micropayment::Debit.customerList
+Micropayment::Debit.customerList(:accessKey => api_key, :testMode => 1)
 #=> { "error"=>"0", "count"=>"2", "maxCount"=>"2", "customerIdList"=>["id1", "id2"] }
 ```
 

@@ -23,8 +23,7 @@ module Micropayment
       # "löscht alle Kunden und Transaktionen in der Testumgebung"
       # "deletes all customers and transactions in the test environment"
       def reset_test(options = {})
-        options[:test_mode] = 1
-        execute(:resetTest, options)
+        execute(:resetTest, options.merge(:testMode => 1))
       end
 
       # "legt neuen Kunden an"
@@ -193,7 +192,7 @@ module Micropayment
       # => "triggers the notification sessionStatus with the status 'CHARGED'"
 
       def sessionChargeTest(options = {})
-        execute(:sessionChargeTest, :testMode => 1)
+        execute(:sessionChargeTest, options.merge(:test_mode => 1))
       end
 
       # "simuliert Stornierung eines einzelnen Vorgangs"
@@ -276,7 +275,7 @@ module Micropayment
       #  initiated by the functions sessionCreate and sessionApprove
       #  also sessionChargeTest, sessionReverseTest and sessionRechargeTest respectively the corresponding events
       def sessionStatus(options = {})
-        assert_valid_keys(options, :accessKey, :testMode, :sessionId, :status, :freeParams)
+        assert_valid_keys(options, :sessionId, :status, :freeParams)
         assert_keys_exists(options, :sessionId, :status, :freeParams)
         #status => ["INIT", "REINIT", "APPROVED", "CHARGED", "REVERSED", "RECHARGED"]
         options
@@ -287,7 +286,7 @@ module Micropayment
       #  is initiated by the functions sessionChargeTest, sessionReverseTest, sessionRechargeTest, transactionCreate,
       # sessionRefund, sessionRefundReverseTest respectively the corresponding events
       def sessionStatus(options = {})
-        assert_valid_keys(options, :accessKey, :testMode, :sessionId, :transactionId, :date, :type, :amount, :description)
+        assert_valid_keys(options, :sessionId, :transactionId, :date, :type, :amount, :description)
         assert_keys_exists(options, :sessionId, :transactionId, :date, :type, :amount, :description)
         #type => [ "BOOKING", "REVERSAL", "BACKPAY", "EXTERNAL", "REFUND", "REFUNDREVERSAL"]
         # #amount if eur cent
