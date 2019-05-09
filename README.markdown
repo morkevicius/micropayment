@@ -24,7 +24,7 @@ Let's try out a test payment using direct debit:
 api_key = Micropayment::Config.api_key
 
 customer =  Micropayment::Debit.reset_test(:accessKey => api_key)
-customer =  Micropayment::Debit.customerList
+customer =  Micropayment::Debit.customerList(:accessKey => api_key)
 customer =  Micropayment::Debit.transactionList((:sessionId  => session["sessionId"])
 
 # create a customer
