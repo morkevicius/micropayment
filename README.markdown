@@ -77,6 +77,9 @@ transaction_list =  Micropayment::Debit.transactionList(:testMode => 1, :accessK
 
 Micropayment::Debit.sessionApprove(:accessKey => api_key, :testMode => 1, :sessionId  => session["sessionId"])
 
+transaction_list =  Micropayment::Debit.transactionList(:testMode => 1, :accessKey => api_key, 
+:sessionId  => session["sessionId"])
+
 Micropayment::Debit.sessionChargeTest(:accessKey => api_key, :testMode => 1, :sessionId  => session["sessionId"])
 
 Micropayment::Debit.sessionReverseTest(
