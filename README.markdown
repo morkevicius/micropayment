@@ -12,7 +12,9 @@ WIP!
 
 ## Usage
 
-First you need to setup at least your API key:
+First you need to setup at least your API key
+(you can leave both of these parameters settings if this is more convienient for you,
+ would have to send it with the calls directly):
 
     Micropayment::Config.api_key = 'xxx'
     # to enter sandbox mode:
@@ -21,14 +23,15 @@ First you need to setup at least your API key:
 Let's try out a test payment using direct debit:
 
 ```
-api_key = Micropayment::Config.api_key
+api_key = Micropayment::Config.api_key # so we dont have to store it here :) 
 
 customer =  Micropayment::Debit.reset_test(:accessKey => api_key)
 customer =  Micropayment::Debit.customerList(:accessKey => api_key)
-customer =  Micropayment::Debit.transactionList((:sessionId  => session["sessionId"])
+customer =  Micropayment::Debit.transactionList(:accessKey => api_key, :sessionId  => session["sessionId"])
 
 # create a customer
 customer =  Micropayment::Debit.customerCreate(
+   :accessKey => api_key,
    :customerId => Time.now.to_i.to_s, 
    :freeParams => {
      "first_name" => "John", 
@@ -41,6 +44,7 @@ customer_data = Micropayment::Debit.customerGet(:customerId => customer["custome
 
 # add a bank account to the customer
 Micropayment::Debit.bankaccountSet(
+  :accessKey => api_key,
   :customerId     => customer["customerId"],
   :iban => 'DE89888888881234567890', 
   :bankCode => '88888888',
@@ -51,21 +55,22 @@ Micropayment::Debit.bankaccountSet(
 )
 
 # create a session
-your_project_id ='1ohg-l6mtc-49a5cc9c' 
+your_project_id = '1ohg-l6mtc-49a5cc9c' 
 session = Micropayment::Debit.sessionCreate(
+  :accessKey => api_key,
   :customerId => customer["customerId"],
   :project    => your_project_id,
   :amount     => 100,
   :payText    => 'Thank you for ...',
-  :mandateRecur => "RECURRING",
-  :payDate => '10'
-)
+  :mandateRecur => "RECURRING"
+  )
 
-Micropayment::Debit.sessionApprove(:sessionId  => session["sessionId"])
+Micropayment::Debit.sessionApprove(:accessKey => api_key, :sessionId  => session["sessionId"])
 
-Micropayment::Debit.sessionChargeTest(:sessionId  => session["sessionId"])
+Micropayment::Debit.sessionChargeTest(:accessKey => api_key, :sessionId  => session["sessionId"])
 
 Micropayment::Debit.sessionReverseTest(
+  :accessKey => api_key, 
   :sessionId  => session["sessionId"],
   :reverseCode => 0,
   :reverseReason => 'UNKNOWN' #"UNSPECIFIED", "ACCOUNT_EXPIRED", "ACCOUNT_WRONG", "NOT_AUTHORIZED", "CONTRADICTED", "UNKNOWN"

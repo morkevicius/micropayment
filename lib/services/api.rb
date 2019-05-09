@@ -7,12 +7,12 @@ module Micropayment
     RootCA          = '/etc/ssl/certs'
     DEFAULT_TIMEOUT = 10
 
-    def ensure_api_key!
-      raise "Micropayment::Config.api_key has not been set. See github.com/GeneralScripting/micropayment"  unless Config.api_key
+    def ensure_api_key!(options = {})
+      raise "(Micropayment::Config.api_key || data[:accessKey]) has not been set. please adjust accordingly" unless (Config.api_key || !options[:accessKey].blank?)
     end
 
     def call(url, method, data = {})
-      ensure_api_key!
+      ensure_api_key!(data)
       data[:action] = method
       data[:accessKey] ||= Config.api_key
       # Workaround micropayment API
