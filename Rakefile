@@ -15,7 +15,7 @@ require 'juwelier'
 Juwelier::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "micropayment"
-  gem.homepage = "http://github.com/GeneralScripting/micropayment"
+  gem.homepage = "http://github.com/morkevicius/micropayment"
   gem.license = "MIT"
   gem.summary = %Q{NVP API implementation for micropayment.de}
   gem.description = %Q{Implements the NameValuePair API provided by micropayment.de}

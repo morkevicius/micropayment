@@ -269,6 +269,31 @@ module Micropayment
         execute(:transactionGet, options)
       end
 
+      # holders for callbacks
+      #
+      # Notifies on every change of the session status, and adds other free parameters
+      #  initiated by the functions sessionCreate and sessionApprove
+      #  also sessionChargeTest, sessionReverseTest and sessionRechargeTest respectively the corresponding events
+      def sessionStatus(options = {})
+        assert_valid_keys(options, :sessionId, :status, :freeParams)
+        assert_keys_exists(options, :sessionId, :status, :freeParams)
+        #status => ["INIT", "REINIT", "APPROVED", "CHARGED", "REVERSED", "RECHARGED"]
+        options
+
+      end
+
+      # Notified on creation of a new transaction
+      #  is initiated by the functions sessionChargeTest, sessionReverseTest, sessionRechargeTest, transactionCreate,
+      # sessionRefund, sessionRefundReverseTest respectively the corresponding events
+      def sessionStatus(options = {})
+        assert_valid_keys(options, :sessionId, :transactionId, :date, :type, :amount, :description)
+        assert_keys_exists(options, :sessionId, :transactionId, :date, :type, :amount, :description)
+        #type => [ "BOOKING", "REVERSAL", "BACKPAY", "EXTERNAL", "REFUND", "REFUNDREVERSAL"]
+        # #amount if eur cent
+        options
+
+      end
+
     end
 
   end

@@ -14,7 +14,7 @@ module Micropayment
     def call(url, method, data = {})
       ensure_api_key!
       data[:action] = method
-      data[:accessKey] = Config.api_key
+      data[:accessKey] ||= Config.api_key
       # Workaround micropayment API
       data[:testMode] ||= Config.sandbox_param ? 1 : 0
       data.delete_if {|k, v| v.nil?}

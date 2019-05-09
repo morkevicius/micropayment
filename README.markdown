@@ -21,6 +21,11 @@ First you need to setup at least your API key:
 Let's try out a test payment using direct debit:
 
 ```
+
+customer =  Micropayment::Debit.reset_test
+customer =  Micropayment::Debit.customerList
+customer =  Micropayment::Debit.transactionList((:sessionId  => session["sessionId"])
+
 # create a customer
 customer =  Micropayment::Debit.customerCreate(
    :customerId => Time.now.to_i.to_s, 
@@ -49,24 +54,20 @@ your_project_id ='1ohg-l6mtc-49a5cc9c'
 session = Micropayment::Debit.sessionCreate(
   :customerId => customer["customerId"],
   :project    => your_project_id,
-  :amount     => 10.00,
+  :amount     => 100,
   :payText    => 'Thank you for ...',
-  :payRecurState => "ON",
-  
+  :mandateRecur => "RECURRING"
 )
 
-Micropayment::Debit.sessionApprove(
-  :sessionId  => session["sessionId"]
-)
-Micropayment::Debit.sessionChargeTest(
-  :sessionId  => session["sessionId"]
-)
+Micropayment::Debit.sessionApprove(:sessionId  => session["sessionId"])
+
+Micropayment::Debit.sessionChargeTest(:sessionId  => session["sessionId"])
 
 Micropayment::Debit.sessionReverseTest(
   :sessionId  => session["sessionId"],
   :reverseCode => 0,
   :reverseReason => 'UNKNOWN' #"UNSPECIFIED", "ACCOUNT_EXPIRED", "ACCOUNT_WRONG", "NOT_AUTHORIZED", "CONTRADICTED", "UNKNOWN"
- 
+
 )
 ```
 
