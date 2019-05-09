@@ -37,21 +37,36 @@ customer_data = Micropayment::Debit.customerGet(:customerId => customer["custome
 Micropayment::Debit.bankaccountSet(
   :customerId     => customer["customerId"],
   :iban => 'DE89888888881234567890', 
-  :country => "DE",
+  :bankCode => '88888888',
+  :bic => 'TESTDE00XXX',
+  :accountNumber => '1234567890',
+  :country => 'DE',
   :accountHolder  => "#{customer_data['freeParams[first_name]']} #{customer_data['freeParams[last_name]']}"
 )
 
 # create a session
-your_project_id ='xxx-xxx-xxxxxxxxx' 
+your_project_id ='1ohg-l6mtc-49a5cc9c' 
 session = Micropayment::Debit.sessionCreate(
   :customerId => customer["customerId"],
   :project    => your_project_id,
   :amount     => 10.00,
-  :payText    => 'Thank you for ...'
+  :payText    => 'Thank you for ...',
+  :payRecurState => "ON",
+  
 )
 
 Micropayment::Debit.sessionApprove(
   :sessionId  => session["sessionId"]
+)
+Micropayment::Debit.sessionChargeTest(
+  :sessionId  => session["sessionId"]
+)
+
+Micropayment::Debit.sessionReverseTest(
+  :sessionId  => session["sessionId"],
+  :reverseCode => 0,
+  :reverseReason => 'UNKNOWN' #"UNSPECIFIED", "ACCOUNT_EXPIRED", "ACCOUNT_WRONG", "NOT_AUTHORIZED", "CONTRADICTED", "UNKNOWN"
+ 
 )
 ```
 
